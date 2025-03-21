@@ -46,5 +46,28 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const activitiesList = document.getElementById("activities-list");
+        try {
+          const response = await fetch("/activities");
+          const activities = await response.json();
+          activitiesList.innerHTML = "";
+          for (const [activityName, activityDetails] of Object.entries(activities)) {
+            const activityCard = document.createElement("div");
+            activityCard.className = "activity-card";
+            activityCard.innerHTML = `
+              <h4>${activityName}</h4>
+              <p>${activityDetails.description}</p>
+              <p><strong>Schedule:</strong> ${activityDetails.schedule}</p>
+              <p><strong>Participants:</strong> ${activityDetails.participants.join(", ") || "None"}</p>
+            `;
+            activitiesList.appendChild(activityCard);
+          }
+        } catch (error) {
+          activitiesList.innerHTML = "<p>Error loading activities.</p>";
+        }
+      });
+    </script>
   </body>
 </html>
